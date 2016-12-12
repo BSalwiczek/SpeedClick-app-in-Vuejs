@@ -8,8 +8,63 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
   </head>
   <body>
+    
+    <div class="container-fluid">
+      <div id="app">
+        <div class="row">
+          <div class="col-sm-6 text-center"><h4>Total clicks: {{ clicks }}</h4></div>
+          <div class="col-sm-6 text-center"><h4>Time from start: {{ time }} s</h4></div>
+          <div class="col-sm-12 text-center"><h4>Avarage Speed: {{ clickAverageSpeed }} click/s</h4></div>
+          <div class="col-sm-12 text-center"><h1>Speed: {{ clickSpeed }} click/s</h1></div>
+          <div class="col-sm-6 col-sm-offset-3 ">
+            <button class="btn btn-block btn-lg btn-success" @click="clicked" style="margin-top: 10px" >Click me!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+       var app = new Vue({
+	el: "#app",
+	data: {
+		clicks: 0,
+		clickAverageSpeed: 0,
+		clickInSec: 0,
+		clickSpeed: 0,
+		time: 1
+	},
+	methods: {
+		clicked: function(){
+			this.clicks++;
+			this.clickInSec++;
+			this.calculateAverageSpeed();
+		},
+		updateSpeedCounter: function(){
+			if(this.clickSpeed>0)
+				this.time++;
+			this.calculateSpeed();
+			this.calculateAverageSpeed();
+
+			var self = this;
+			setTimeout(function(){self.updateSpeedCounter(); },1000)
+		},
+		calculateSpeed: function(){
+			this.clickSpeed = this.clickInSec;
+			this.clickInSec = 0;
+		},
+		calculateAverageSpeed: function(){
+			this.clickAverageSpeed = Math.round((this.clicks/this.time)*10)/10;
+		}
+	},
+	created: function () {
+	    this.updateSpeedCounter();
+  	}
+});
+    </script>
+    
     <section class="page-header">
       <h1 class="project-name">Speedclick-app-in-vuejs</h1>
       <h2 class="project-tagline"></h2>
